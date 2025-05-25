@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>Nex</title>
+    <style>
+        /* Cont�iner do tabuleiro */
+        #board {
+            position: relative;
+            margin: 20px;
+            /* visualizar os limites */
+            border: 5px solid #ccc;
+            background: seashell;
+        }
+
+        /* Cada célula do tabuleiro */
+        .hex {
+            position: absolute;
+            width: 57px;
+            height: 50px;
+            background: lightblue;
+            font-size: 24px;
+            border: 0px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            /* Forma hexagonal via clip-path */
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <h1>Nex</h1>
+        <!-- O tabuleiro inserido aqui -->
+        <div id="board"></div>
+
+
+        <label for="boardSize">Tamanho:</label>
+        <select id="boardSize" onchange="createBoard(this.value)">
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+        </select>
+
+    </center>
+
+    <script>
+    /**
+     * Cria um tabuleiro com coordenadas axiais.
+     * Aqui, q (coluna) aumenta para a direita e r (linha) para baixo.
+     * As posi��es s�o calculadas de modo que:
+     *   � Incrementar q move a c�lula na dire��o de 30� (vetor (cos30, sin30))
+     *   � Incrementar r move a c�lula na dire��o de �30� (vetor (cos30, �sin30))
+     * Assim, as �colunas� ficam a +30� e as �linhas� a �30� em rela��o � horizontal.
+     */
+        function createBoard(size) {
+            const board = document.getElementById("board");
+            board.innerHTML = ""; // Limpa o tabuleiro anterior
+            const boardMatrix = [];
+            const cellSize = 50; // Base para os c�lculos (largura da c�lula)
+            const cos30 = Math.cos(Math.PI / 6);  // ~0.866
+            const sin30 = Math.sin(Math.PI / 6);  // 0.5
+
+            // dados: 
+            board.dataset.casa1 = ""; // casa selecionada
+            board.dataset.casa2 = ""; 
+            board.dataset.casa3 = ""; 
+            board.dataset.jogador = 1; // quem joga
+            board.dataset.tipoJogada = 0; // 1 - jogada normal, 2 - jogada substituição (3 peças)
+            board.dataset.corSel = "beige"; // cor de uma casa selecionada
+            board.dataset.corNormal = "lightblue"; // cor de uma casa não selecionada
+
+            // Itera pelas linhas (r) e colunas (q)
+            for (let r = 0; r < size; r++) {
+                boardMatrix[r] = [];
+                for (let q = 0; q < size; q++) {
+                    const hex = document.createElement("div");
+                    hex.classList.add("hex");
+                    // Calcula a posição:
+                    // x = (q + r) * (cellSize * cos30)
+                    // y = (q + r) * (cellSize * sin30)
+                    const x = (r + q) * (cellSize * cos30) * 1.1;
+                    const y = (size - 1 + r - q) * (cellSize * sin30) * 1.1;
+                    hex.style.left = `${x}px`;
+                    hex.style.top = `${y}px`;
+
+                    // Define a posição identificadora (colunas com letras e linhas com números)
+                    hex.dataset.position = String.fromCharCode(65 + q) + (r + 1);
+                    hex.dataset.conteudo = 0;
+
+                    // Evento de clique em cada hexágono
+                    hex.addEventListener("click", () =>
+                        handleHexClick(hex, board));
+
+                    board.appendChild(hex);
+                    boardMatrix[r][q] = hex;
+                }
+            }
+
+            // dimensãoo do container do tabuleiro
+            const totalWidth = ((size - 1) * cellSize * cos30 * 2 * 1.1) + cellSize + 7;
+            const totalHeight = ((size - 1) * cellSize * sin30 * 2 * 1.1) + cellSize;
+            board.style.width = totalWidth + "px";
+            board.style.height = totalHeight + "px";
+
+            // criar casas de indicação de jogador a jogar (nos cantos)
+            const positions = [
+                { x: 0, y: 0, name: "sup-esq" },
+                { x: totalWidth - cellSize - 7, y: totalHeight - cellSize, name: "inf-dir" },
+                { x: totalWidth - cellSize - 7, y: 0, name: "sup-dir" },
+                { x: 0, y: totalHeight - cellSize, name: "inf-esq" }
+            ];
+
+            positions.forEach(pos => {
+                const hex = document.createElement("div");
+                hex.classList.add("hex");
+                hex.style.left = `${pos.x}px`;
+                hex.style.top = `${pos.y}px`;
+                hex.dataset.position = pos.name;
+                hex.style.background = "thistle";
+                board.appendChild(hex);
+            });
+            board.boardMatrix = boardMatrix;
+            EfetuarJogada(board);
+        }
+
+        // Função que recebe o hex clicado e o tabuleiro
+        function handleHexClick(hex, board) {
+            if (board.dataset.casa1 == "") {
+                if (hex.dataset.conteudo == 0) {
+                    board.dataset.casa1 = hex.dataset.position;
+                    hex.style.background = board.dataset.corSel;
+                    board.dataset.tipoJogada = 1;
+                    // colocar peça da cor do jogador
+                    if (board.dataset.jogador == 0) {
+                        hex.innerHTML = "🔵"; // Peça azul
+                        hex.dataset.conteudo = 2;
+                    }
+                    else {
+                        hex.innerHTML = "🔴"; // Peça vermelha
+                        hex.dataset.conteudo = 3;
+                    }
+                } else if (hex.dataset.conteudo == 1) {
+                    // tem peça branca, para substituir
+                    board.dataset.casa1 = hex.dataset.position;
+                    hex.style.background = board.dataset.corSel;
+                    board.dataset.tipoJogada = 2;
+                } else
+                    alert('Para jogada de substituição, selecionar primeiro duas brancas, e depois uma peça da sua cor.');
+            }
+            else if (board.dataset.casa2 == "") {
+                if (board.dataset.tipoJogada == 1) {
+                    if (hex.dataset.conteudo == 0) {
+                        board.dataset.casa2 = hex.dataset.position;
+                        hex.style.background = board.dataset.corSel;
+                        hex.innerHTML = "⚪"; // Peça branca
+                        hex.dataset.conteudo = 1;
+                        EfetuarJogada(board);
+                    } else
+                        alert("Tem de selecionar uma casa vazia para completar a jogada");
+                } else if (board.dataset.tipoJogada == 2) {
+                    // selecionar outra branca
+                    if (hex.dataset.conteudo == 1) {
+                        // tem peça branca, para substituir
+                        board.dataset.casa2 = hex.dataset.position;
+                        hex.style.background = board.dataset.corSel;
+                    } else
+                        alert('Para jogada de substituição, selecionar primeiro duas brancas, e depois uma peça da sua cor.');
+                }
+            }
+            else if (board.dataset.casa3 == "") {
+                const sel1 = document.querySelector(`[data-position="${board.dataset.casa1}"]`);
+                const sel2 = document.querySelector(`[data-position="${board.dataset.casa2}"]`);
+                if (board.dataset.jogador == 0 && hex.dataset.conteudo == 2) {
+                    // selecionada peça azul
+                    hex.dataset.conteudo = 1;
+                    hex.innerHTML = "⚪"; // Peça branca
+                    sel1.dataset.conteudo = 2;
+                    sel1.innerHTML = "🔵"; // Peça azul
+                    sel2.dataset.conteudo = 2;
+                    sel2.innerHTML = "🔵"; // Peça azul
+                    EfetuarJogada(board);
+                } else if (board.dataset.jogador == 1 && hex.dataset.conteudo == 3) {
+                    // selecionada peça vermelha
+                    hex.dataset.conteudo = 1;
+                    hex.innerHTML = "⚪"; // Peça branca
+                    sel1.dataset.conteudo = 3;
+                    sel1.innerHTML = "🔴"; // Peça vermelha
+                    sel2.dataset.conteudo = 3;
+                    sel2.innerHTML = "🔴"; // Peça vermelha
+                    EfetuarJogada(board);
+                } else
+                    alert("Escolher uma peça da sua cor");
+            }
+        }
+
+        // executar uma jogada
+        function EfetuarJogada(board) {
+            const sel1 = document.querySelector(`[data-position="${board.dataset.casa1}"]`);
+            const sel2 = document.querySelector(`[data-position="${board.dataset.casa2}"]`);
+            const sel3 = document.querySelector(`[data-position="${board.dataset.casa3}"]`);
+            // troca de jogador
+            board.dataset.jogador = 1 - board.dataset.jogador;
+            // repor fundo
+            if(sel1)
+                sel1.style.background = board.dataset.corNormal;
+            if(sel2)
+                sel2.style.background = board.dataset.corNormal;
+            if (sel3)
+                sel3.style.background = board.dataset.corNormal;
+            // tipo de jogada indefinido
+            board.dataset.tipoJogada = 0;
+            // limpar seleção
+            board.dataset.casa1 = "";
+            board.dataset.casa2 = "";
+            board.dataset.casa3 = "";
+            // atualizar quem joga
+            const supdir = document.querySelector(`[data-position="sup-dir"]`);
+            const supesq = document.querySelector(`[data-position="sup-esq"]`);
+            const infdir = document.querySelector(`[data-position="inf-dir"]`);
+            const infesq = document.querySelector(`[data-position="inf-esq"]`);
+            if (board.dataset.jogador == 0) {
+                supesq.innerHTML = "🔵"; // Peça azul
+                infdir.innerHTML = "🔵"; // Peça azul
+                supdir.innerHTML = "";
+                infesq.innerHTML = "";
+            } else {
+                supesq.innerHTML = "";
+                infdir.innerHTML = "";
+                supdir.innerHTML = "🔴"; // Peça vermelha
+                infesq.innerHTML = "🔴"; // Peça vermelha
+            }
+            if (JogoTerminado(board.boardMatrix, board.dataset.jogador)) {
+                supesq.innerHTML = "🔵"; // Peça azul
+                infdir.innerHTML = "🔵"; // Peça azul
+                supdir.innerHTML = "🔴"; // Peça vermelha
+                infesq.innerHTML = "🔴"; // Peça vermelha
+                if (board.dataset.jogador == 0) {
+                    supdir.style.background = "gold";
+                    infesq.style.background = "gold";
+                } else {
+                    supesq.style.background = "gold";
+                    infdir.style.background = "gold";
+                }
+                alert("Vitória " + board.dataset.jogador == 1 ? "Vermelha" : "Azul");
+            }
+        }
+
+        const axialDirections = [
+            { dq: 1, dr: 0 },
+            { dq: 1, dr: -1 },
+            { dq: 0, dr: -1 },
+            { dq: -1, dr: 0 },
+            { dq: -1, dr: 1 },
+            { dq: 0, dr: 1 }
+        ];
+
+        function getNeighbors(matrix, r, q) {
+            const neighbors = [];
+            axialDirections.forEach(dir => {
+                const nr = r + dir.dr;
+                const nq = q + dir.dq;
+                if (nr >= 0 && nr < matrix.length && nq >= 0 && nq < matrix[0].length) {
+                    neighbors.push({ r: nr, q: nq });
+                }
+            });
+            return neighbors;
+        }
+
+        function LimpaFundo(matrix) {
+            for (let r = 0; r < matrix.length; r++) {
+                for (let c = 0; c < matrix[0].length; c++) {
+                    const cell = matrix[r][c];
+                    cell.style.background = "lightblue";
+                }
+            }
+        }
+
+        function JogoTerminado(matrix, jogador) {
+            // jogador=0: conectar de cima para baixo; jogador=1: conectar da esquerda para a direita
+            jogador = 1 - jogador; // jogador anterior, que acabou de jogar
+            const target = jogador == 0 ? 2 : 3; // supondo que os valores do dataset.conteudo sejam '2' ou '3'
+            const visited = new Set();
+            const queue = [];
+            let resultado = 0;
+            let corSel = "gold";
+
+            // Função que cria uma chave para identificar cada célula
+            function key(r, q) {
+                return `${r},${q}`;
+            }
+
+            LimpaFundo(matrix);
+
+            // Inicializa a queue com as células da borda de partida, dependendo do jogador
+            if (jogador == 0) {
+                // Liga de cima para baixo: começa na primeira linha
+                for (let q = 0; q < matrix[0].length; q++) {
+                    const cell = matrix[0][q];
+                    if (cell.dataset.conteudo == target) {
+                        cell.style.background = corSel;
+                        visited.add(key(0, q));
+                        queue.push({ r: 0, q: q });
+                    }
+                }
+            } else {
+                // Liga da esquerda para a direita: começa na primeira coluna
+                for (let r = 0; r < matrix.length; r++) {
+                    const cell = matrix[r][0];
+                    if (cell.dataset.conteudo == target) {
+                        cell.style.background = corSel;
+                        visited.add(key(r, 0));
+                        queue.push({ r: r, q: 0 });
+                    }
+                }
+            }
+
+            // Busca em largura (BFS) para capturar todas as células conectadas
+            while (queue.length > 0) {
+                const { r, q } = queue.shift();
+
+                // Verifica se a célula atual está na borda oposta
+                if ((jogador == 0 && r === matrix.length - 1) ||
+                    (jogador == 1 && q === matrix[0].length - 1)) {
+                    return true;
+                }
+
+                const neighCoords = getNeighbors(matrix, r, q);
+                // Use um laço for tradicional para poder sair imediatamente em caso de sucesso
+                for (let i = 0; i < neighCoords.length; i++) {
+                    const { r: nr, q: nq } = neighCoords[i];
+                    const cellKey = key(nr, nq);
+                    if (!visited.has(cellKey)) {
+                        const neighbor = matrix[nr][nq];
+                        if (neighbor.dataset.conteudo == target) {
+                            neighbor.style.background = corSel;
+                            visited.add(cellKey);
+                            queue.push({ r: nr, q: nq });
+                            // Se o vizinho estiver na borda oposta, retorna imediatamente
+                            if ((jogador == 0 && nr === matrix.length - 1) ||
+                                (jogador == 1 && nq === matrix[0].length - 1)) {
+                                resultado = 1;
+                            }
+                        }
+                    }
+                }
+            }
+            if (resultado == 0)
+                LimpaFundo(matrix);
+
+            return resultado != 0;
+        }
+
+
+
+ 
+
+    // Tabuleiro inicial de 4x4
+    createBoard(4);
+    </script>
+</body>
+</html>
