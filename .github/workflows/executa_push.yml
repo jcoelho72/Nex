@@ -24,10 +24,11 @@ jobs:
           # Caso o pacote do Emscripten não seja o ideal ou precise de mais configurações,
           # confira as instruções oficiais:
           # https://emscripten.org/docs/getting_started/downloads.html
-      - name: Verificar existência do arquivo TRand.cpp
+
+      - name: Listar estrutura do diretório antes de compilar
         run: |
-          echo "Procurando arquivo TRand.cpp..."
-          find . -name "TRand.cpp" || (echo "Erro: Arquivo TRand.cpp não encontrado!" && exit 1)
+          echo "Estrutura do projeto:"
+          ls -R
 
       # 3. Compilação da aplicação com o Makefile
       - name: Build with Makefile
