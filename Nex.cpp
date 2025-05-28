@@ -713,7 +713,7 @@ void CNex::LigacoesCasa(int casa, TCasa lado, bool binario, CNex* fim) {
 				Casa(casa, pecaLetra); // casa já processada, não reutilizar
 		}
 	}
-}
+} 
 
 
 // estados repetidos num nível podem ser obtidos por ordens distintas de movimentos, para além das simetrias
