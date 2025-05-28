@@ -22,33 +22,20 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y emscripten
-          # Caso o pacote do Emscripten não seja o ideal ou precise de mais configurações,
-          # confira as instruções oficiais:
-          # https://emscripten.org/docs/getting_started/downloads.html
 
       # 3. Compilação da aplicação com o Makefile
       - name: Build with Makefile
         run: make
 
-      # 4. Deploy para a branch gh-pages
-      - name: Deploy to gh-pages
+      # 4. Preparar os arquivos de deploy copiando os arquivos necessários para uma pasta de distribuição
+      - name: Prepare deploy folder
         run: |
-          # Configura o Git para a identificação do bot
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
-          # Muda para a branch gh-pages
-          git checkout gh-pages
-          
-          # Comando para apagar todos os arquivos (tracked) que NÃO sejam os desejados
-          git ls-files | grep -vE '^(nex\.html|nex\.js|nex\.wasm|nex\.css|nex_wasm\.js)$' | xargs git rm -f
-          
-          # Adiciona os arquivos (mesmo que não estejam modificados, o git add -f
-          # garante que eles sejam inseridos na staging area)
-          git add nex.html nex.js nex.wasm nex_wasm.js nex.css
-          
-          # Faz o commit com uma mensagem de deploy
-          git commit -m "Deploy updated web files"
-          
-          # Faz o push da branch gh-pages
-          git push origin gh-pages
+          mkdir -p deploy
+          cp nex.html nex.js nex.wasm nex.css nex_wasm.js deploy/
+
+      # 5. Deploy para a branch gh-pages usando a ação especializada
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./deploy
