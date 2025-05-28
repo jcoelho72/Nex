@@ -10,7 +10,7 @@ SOURCES = nex_em.cpp
 
 .PHONY: all clean
 
-all: $(TARGET)
+all: $(TARGET) 
 
 $(TARGET): $(SOURCES)
     $(EMCC) $(CFLAGS) $(EXPORTED_FUNCTIONS) $(EXPORTED_RUNTIME_METHODS) -o $(TARGET) $(SOURCES)
