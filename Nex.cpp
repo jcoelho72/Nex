@@ -214,6 +214,7 @@ void CNex::TrocaCor() {
 		switch (Casa(i)) {
 		case pecaBranca: pecaB = i; break;
 		case pecaLetra: pecaL = i; break;
+		default: break;
 		}
 	if (pecaL >= 0 && pecaB >= 0) {
 		Casa(pecaL, casaVazia);
