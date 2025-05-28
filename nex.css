@@ -1,0 +1,136 @@
+/* Estilos básicos para o layout e interface */
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+}
+
+center {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+#board {
+    position: relative;
+    margin: 20px auto;
+    border: 25px solid #ccc;
+    background: seashell;
+    /* Use dimensões dinâmicas ou fixe para encaixar seu jogo */
+}
+
+/* Cada célula do tabuleiro */
+.hex {
+    position: absolute;
+    width: 57px;
+    height: 50px;
+    background: lightblue;
+    font-size: 24px;
+    border: 0px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    /* Forma hexagonal via clip-path */
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+}
+
+.anotacao {
+    position: absolute;
+    width: 28px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    background-color: lightgray;
+}
+
+#controlZone {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+    #controlZone section {
+        background: white;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+    }
+
+
+footer {
+    margin-top: 20px;
+}
+
+
+@keyframes piscarBorda {
+    0% { border-color: #ccc; }
+    50% { border-color: red; }
+    100% { border-color: #ccc; }
+}
+
+#board.pensando {
+    animation: piscarBorda 1s infinite;
+}
+
+#computerStats {
+    background: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+#statsContent {
+    font-family: monospace;
+    white-space: pre-wrap;
+}
+
+#moveList {
+    list-style-position: inside; /* Mantém os números próximos do texto */
+    padding-left: 10px;
+    text-align: left;
+}
+
+.miniTabela {
+    border-collapse: collapse;
+    width: 100%;
+    text-align: center;
+}
+
+    .miniTabela td {
+        border: 1px solid #ddd;
+        padding: 5px;
+        font-size: 16px;
+    }
+
+#gameResults {
+    /*width: 100%;  Faz a seção ocupar toda a largura da página */
+    grid-column: 1 / -1; /* Faz a seção ocupar todas as colunas disponíveis */
+    text-align: center; /* Mantém a tabela centralizada */
+}
+
+#resultsTable {
+   /* width: 100%;*/
+    border-collapse: collapse;
+}
+
+    #resultsTable th,
+    #resultsTable td {
+        border: 1px solid #ccc;
+        padding: 5px;
+        text-align: center;
+    }
+
+
+.activeMove {
+    border: 2px solid #00aa00;
+    background-color: #e0ffe0;
+}
