@@ -7,14 +7,13 @@ EXPORTED_RUNTIME_METHODS = -s EXPORTED_RUNTIME_METHODS="['ccall', 'cwrap', 'UTF8
 
 TARGET = nex.js
 SOURCES = nex_em.cpp
-INCLUDE_DIRS = -I./TProcuraAdversa/TProcuraConstrutiva
 
 .PHONY: all clean
 
 all: $(TARGET) 
 
 $(TARGET): $(SOURCES)
-	$(EMCC) $(CFLAGS) $(INCLUDE_DIRS) $(EXPORTED_FUNCTIONS) $(EXPORTED_RUNTIME_METHODS) -o $(TARGET) $(SOURCES)
+	$(EMCC) $(CFLAGS) $(EXPORTED_FUNCTIONS) $(EXPORTED_RUNTIME_METHODS) -o $(TARGET) $(SOURCES)
 
 clean:
 	rm -f $(TARGET) nex.wasm
