@@ -21,13 +21,13 @@
     <ClCompile Include="ProcuraEngine.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="TProcuraAdversa.cpp">
+    <ClCompile Include="TProcuraAdversa\TProcuraAdversa.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="TRand.cpp">
+    <ClCompile Include="TProcuraAdversa\TProcuraConstrutiva\TProcuraConstrutiva.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
-    <ClCompile Include="TProcuraConstrutiva.cpp">
+    <ClCompile Include="TProcuraAdversa\TProcuraConstrutiva\TRand.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,16 +35,16 @@
     <ClInclude Include="Nex.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="TProcuraAdversa.h">
+    <ClInclude Include="TProcuraAdversa\TProcuraConstrutiva\TProcuraConstrutiva.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="TProcuraConstrutiva.h">
+    <ClInclude Include="TProcuraAdversa\TProcuraConstrutiva\TRand.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="TRand.h">
+    <ClInclude Include="TProcuraAdversa\TProcuraConstrutiva\TVector.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
-    <ClInclude Include="TVector.h">
+    <ClInclude Include="TProcuraAdversa\TProcuraAdversa.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
   </ItemGroup>

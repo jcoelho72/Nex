@@ -21,16 +21,16 @@
   <ItemGroup>
     <ClCompile Include="Nex.cpp" />
     <ClCompile Include="ProcuraEngine.cpp" />
-    <ClCompile Include="TProcuraAdversa.cpp" />
-    <ClCompile Include="TProcuraConstrutiva.cpp" />
-    <ClCompile Include="TRand.cpp" />
+    <ClCompile Include="TProcuraAdversa\TProcuraAdversa.cpp" />
+    <ClCompile Include="TProcuraAdversa\TProcuraConstrutiva\TProcuraConstrutiva.cpp" />
+    <ClCompile Include="TProcuraAdversa\TProcuraConstrutiva\TRand.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Nex.h" />
-    <ClInclude Include="TProcuraAdversa.h" />
-    <ClInclude Include="TProcuraConstrutiva.h" />
-    <ClInclude Include="TRand.h" />
-    <ClInclude Include="TVector.h" />
+    <ClInclude Include="TProcuraAdversa\TProcuraAdversa.h" />
+    <ClInclude Include="TProcuraAdversa\TProcuraConstrutiva\TProcuraConstrutiva.h" />
+    <ClInclude Include="TProcuraAdversa\TProcuraConstrutiva\TRand.h" />
+    <ClInclude Include="TProcuraAdversa\TProcuraConstrutiva\TVector.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

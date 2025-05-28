@@ -95,54 +95,31 @@ document.getElementById('btnJogar').addEventListener('click', function () {
     board.dataset.computador = board.dataset.jogador;
     // acertar nível de jogo
     const nivel = Number(document.getElementById('nivelJogo').value);
-    if (nivel == 1) { // Nível 1: limite = 3 ruido = -100 podaCega=200 (profundidade 2) 1s
-        SetParametro(5, 3);
-        SetParametro(8, -100);
-        SetParametro(4, 1);
-        SetParametro(12, 200); // fator limitativo, mesmo no 4x4
-        SetParametro(11, 0);
-        SetParametro(6, 1); // ignorar gerados
-        SetParametro(10, 1); // ordenação normal
-        SetParametro(13, 2); // maior ameaça
-    } else if (nivel == 2) { // Nivel 2: limite = 4 podaCega = 1000 ruido = -50 podaHeur=32 (profundidade 3) 1s
-        SetParametro(5, 4);
-        SetParametro(8, -50);
-        SetParametro(4, 1);
-        SetParametro(12, 1000); 
-        SetParametro(11, 32);
-        SetParametro(6, 1); 
-        SetParametro(10, 1); 
-        SetParametro(13, 2); 
-    } else if (nivel == 3) { // Nivel 3: limite = 0 limiteTempo = 2s(iterativo)  podaHeur=32 -- - base
-        SetParametro(5, 0);
-        SetParametro(8, -10);
-        SetParametro(4, 2);
-        SetParametro(12, 0);
-        SetParametro(11, 32);
-        SetParametro(6, 1);
-        SetParametro(10, 1); 
-        SetParametro(13, 2); 
-    } else if (nivel == 4) { // Nivel 4: limite = 0 limiteTempo = 5s podaHeur=32 
-        SetParametro(5, 0);
-        SetParametro(8, -5);
-        SetParametro(4, 5);
-        SetParametro(12, 0);
-        SetParametro(11, 32);
-        SetParametro(6, 1);
-        SetParametro(10, 1); 
-        SetParametro(13, 2); 
-    } else if (nivel == 5) { // Nível 5: limite = 0 limiteTempo = 10s podaHeur=32 
-        SetParametro(5, 0);
-        SetParametro(8, -1);
-        SetParametro(4, 10);
-        SetParametro(12, 0);
-        SetParametro(11, 32);
-        SetParametro(6, 3); // identificar repetidos
-        SetParametro(10, 2); // ordenação hashtable
-        SetParametro(13, 2); 
+    if (nivel == 1) { // Nível 1: Nível 1: limite=2 limiteTempo=1s podaBranca=0 (profundidade 1)
+        SetParametro(8, 2); // limite
+        SetParametro(4, 1); // limiteTempo
+        SetParametro(17, 1); // heurHex
+    } else if (nivel == 2) { // Nivel 2: limite=3 limiteTempo=1s podaBranca=0 (profundidade 2)	
+        SetParametro(8, 3); // limite
+        SetParametro(4, 1); // limiteTempo
+        SetParametro(17, 1); // heurHex
+    } else if (nivel == 3) { // Nivel 3: limite=0 limiteTempo=2s podaBranca=0
+        SetParametro(8, 0); // limite
+        SetParametro(4, 2); // limiteTempo
+        SetParametro(17, 1); // heurHex
+    } else if (nivel == 4) { // Nivel 4: limite=0 limiteTempo=5s podaBranca=0 
+        SetParametro(8, 0); // limite
+        SetParametro(4, 5); // limiteTempo
+        SetParametro(17, 1); // heurHex
+    } else if (nivel == 5) { // Nível 5: limite=0 limiteTempo=10s podaBranca=0
+        SetParametro(8, 0); // limite
+        SetParametro(4, 10); // limiteTempo
+        SetParametro(17, 1); // heurHex
     }
     // semente aleatória, com base no tempo em milisegundos
     SetParametro(3, (Date.now() % 1000000) + 1);
+
+    SetParametro(0, 1); // algoritmo
 
     if (board.dataset.jogoEmCurso == 1)
         JogarComputador();
@@ -338,7 +315,7 @@ function ExecutarLanceHTML(lance) {
     } else if (lance === "INV") {
         Inverter(false);
     } else {
-        console.error("Formato inválido de jogada:", resultado);
+        console.error("Formato inválido de jogada:", lance);
     }
 
 }
