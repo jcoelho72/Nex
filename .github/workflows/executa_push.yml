@@ -40,14 +40,12 @@ jobs:
           # Muda para a branch gh-pages
           git checkout gh-pages
           
-          # Comando para apagar todos os arquivos (tracked) que NÃO sejam os desejados:
-          # Este comando lista os arquivos com `git ls-files`, filtra (via grep) todos
-          # que não sejam nex.html, nex.js ou nex.wasm e os remove com git rm.
-          git ls-files | grep -vE '^(nex\.html|nex\.js|nex\.wasm)$' | xargs git rm -f
+          # Comando para apagar todos os arquivos (tracked) que NÃO sejam os desejados
+          git ls-files | grep -vE '^(nex\.html|nex\.js|nex\.wasm|nex\.css|nex_wasm\.js)$' | xargs git rm -f
           
-          # Adiciona os três arquivos (mesmo que não estejam modificados, o git add -f
+          # Adiciona os arquivos (mesmo que não estejam modificados, o git add -f
           # garante que eles sejam inseridos na staging area)
-          git add nex.html nex.js nex.wasm
+          git add nex.html nex.js nex.wasm nex_wasm.js nex.css
           
           # Faz o commit com uma mensagem de deploy
           git commit -m "Deploy updated web files"
