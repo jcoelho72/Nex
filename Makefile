@@ -13,7 +13,7 @@ SOURCES = nex_em.cpp
 all: $(TARGET) 
 
 $(TARGET): $(SOURCES)
-    $(EMCC) $(CFLAGS) $(EXPORTED_FUNCTIONS) $(EXPORTED_RUNTIME_METHODS) -o $(TARGET) $(SOURCES)
+	$(EMCC) $(CFLAGS) $(EXPORTED_FUNCTIONS) $(EXPORTED_RUNTIME_METHODS) -o $(TARGET) $(SOURCES)
 
 clean:
-    rm -f $(TARGET) nex.wasm
+	rm -f $(TARGET) nex.wasm
