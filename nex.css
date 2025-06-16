@@ -1,4 +1,4 @@
-/* Estilos b·sicos para o layout e interface */
+/* Estilos b√°sicos para o layout e interface */
 
 body {
     font-family: Arial, sans-serif;
@@ -17,10 +17,10 @@ center {
     margin: 20px auto;
     border: 25px solid #ccc;
     background: seashell;
-    /* Use dimensıes din‚micas ou fixe para encaixar seu jogo */
+    /* Use dimens√µes din√¢micas ou fixe para encaixar seu jogo */
 }
 
-/* Cada cÈlula do tabuleiro */
+/* Cada c√©lula do tabuleiro */
 .hex {
     position: absolute;
     width: 57px;
@@ -94,7 +94,7 @@ footer {
 }
 
 #moveList {
-    list-style-position: inside; /* MantÈm os n˙meros prÛximos do texto */
+    list-style-position: inside; /* Mant√©m os n√∫meros pr√≥ximos do texto */
     padding-left: 10px;
     text-align: left;
 }
@@ -112,9 +112,9 @@ footer {
     }
 
 #gameResults {
-    /*width: 100%;  Faz a seÁ„o ocupar toda a largura da p·gina */
-    grid-column: 1 / -1; /* Faz a seÁ„o ocupar todas as colunas disponÌveis */
-    text-align: center; /* MantÈm a tabela centralizada */
+    /*width: 100%;  Faz a se√ß√£o ocupar toda a largura da p√°gina */
+    grid-column: 1 / -1; /* Faz a se√ß√£o ocupar todas as colunas dispon√≠veis */
+    text-align: center; /* Mant√©m a tabela centralizada */
 }
 
 #resultsTable {
@@ -133,4 +133,21 @@ footer {
 .activeMove {
     border: 2px solid #00aa00;
     background-color: #e0ffe0;
+}
+
+#footer-iframe {
+  width: 100%;
+  border: none;
+  display: block;
+  overflow: hidden;
+  
+  /* Default height for single-line view */
+  height: 30px;
+}
+
+/* Adjust height for two-line view on smaller screens */
+@media (max-width: 768px) {
+  #footer-iframe {
+    height: 60px;
+  }
 }
